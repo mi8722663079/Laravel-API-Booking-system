@@ -1,58 +1,109 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel Event Booking API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A robust, RESTful API built with Laravel to power an event booking system. This backend service provides comprehensive endpoints for user authentication, event browsing, and ticket booking, alongside secure administrative routes for total platform management. 
 
-## About Laravel
+## 🚀 Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### User Endpoints
+* **Event Retrieval:** JSON endpoints to fetch upcoming events, including detailed descriptions and media URLs.
+* **Booking Engine:** Secure API routes for event registration and ticket booking.
+* **Authentication & Email Verification:** Token-based authentication flow with reliable email verification powered by **MailerSend**.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Admin Endpoints
+* **Event Management:** Secure CRUD operations to create, update, and delete events.
+* **Media Handling:** API integration with **Spatie Media Library** to handle multipart/form-data uploads for event banners and galleries.
+* **Booking Oversight:** Endpoints to track user registrations, manage event capacity, and oversee the booking lifecycle.
+* **User Control:** Manage user roles, permissions, and verified statuses via administrative routes.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 🛠️ Tech Stack
 
-## Learning Laravel
+* **Framework:** Laravel (PHP) - *API Mode*
+* **Database:** MySQL
+* **Media Management:** [Spatie Media Library](https://spatie.be/docs/laravel-medialibrary/v11/introduction)
+* **Email Delivery:** [MailerSend](https://www.mailersend.com/)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 📋 Prerequisites
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Before you begin, ensure you have the following installed:
+* PHP >= 8.1
+* Composer
+* MySQL
+* A MailerSend Account & API Key
+* An API Client (e.g., Postman, Insomnia) for testing endpoints
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+## ⚙️ Installation
 
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
+**1. Clone the repository**
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone [https://github.com/yourusername/your-repo-name.git](https://github.com/yourusername/your-repo-name.git)
+cd your-repo-name
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+**2. Install PHP dependencies**
+```bash
+composer install
+```
 
-## Contributing
+**3. Setup Environment Variables**
+Copy the `.env.example` file to create your `.env` file:
+```bash
+cp .env.example .env
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+**4. Generate Application Key**
+```bash
+php artisan key:generate
+```
 
-## Code of Conduct
+**5. Configure the Database and Services**
+Open the `.env` file and update your database credentials:
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=your_database_name
+DB_USERNAME=your_database_user
+DB_PASSWORD=your_database_password
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Configure **MailerSend** for API-based email verification:
+```env
+MAIL_MAILER=mailersend
+MAILERSEND_API_KEY=your_mailersend_api_key
+MAIL_FROM_ADDRESS="hello@yourdomain.com"
+MAIL_FROM_NAME="${APP_NAME}"
+```
 
-## Security Vulnerabilities
+**6. Run Migrations**
+Set up the database tables (including Spatie Media Library tables and API personal access tokens):
+```bash
+php artisan migrate
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+**7. Create the Storage Link**
+Ensure media files are accessible via public URLs in your JSON responses:
+```bash
+php artisan storage:link
+```
 
-## License
+**8. Run the Development Server**
+```bash
+php artisan serve
+```
+The API base URL will be `http://localhost:8000/api`.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 📡 API Usage Notes
+
+* **Headers:** All requests to the API should include the following header to ensure proper JSON formatting and error handling:
+  ```http
+  Accept: application/json
+  ```
+* **Authentication:** Protected routes require a Bearer token. Include it in your request headers:
+  ```http
+  Authorization: Bearer {your_token_here}
+  ```
+* **File Uploads:** When interacting with the Admin endpoints to create events with images, ensure your client is sending a `multipart/form-data` payload.
+
+## 📄 License
+
+This project is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
